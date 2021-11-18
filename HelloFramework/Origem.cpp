@@ -48,8 +48,20 @@ const float pi = 3.14159;
 
 // Configuração de filtros
 
-const bool isGray = true;
-const bool inversion = true;
+const bool isGray = false;
+const bool inversion = false;
+const bool onlyRed = false;
+const bool binary = false;
+
+// não finalizado
+const bool isColorization = false;
+float colorization[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+
+const bool isMix = true;
+
+//valores para channel 1 or 2;
+const float channel = 1;
 
 
 
@@ -95,7 +107,7 @@ int main()
 	// Compilando e buildando o programa de shader
 	Shader* shader = new Shader("./shaders/sprite.vs", "./shaders/sprite.fs");
 
-	GLuint texID = loadTexture("./textures/mario.png");
+	GLuint texID = loadTexture("./textures/lena.png");
 
 
 	// Gerando um buffer simples, com a geometria de um triângulo
@@ -124,12 +136,63 @@ int main()
 
 		glUniform1i(glGetUniformLocation(shader->Program, "isGray"), true);
 	}
+
 	if (inversion)
 	{
 		GLint inversion = glGetUniformLocation(shader->Program, "inversion");
 		assert(inversion > -1);
 
 		glUniform1i(glGetUniformLocation(shader->Program, "inversion"), true);
+	}
+
+	if (onlyRed)
+	{
+		GLint onlyRedGLInt = glGetUniformLocation(shader->Program, "onlyRed");
+		assert(onlyRedGLInt > -1);
+
+		glUniform1i(glGetUniformLocation(shader->Program, "onlyRed"), true);
+	}
+
+	if (binary)
+	{
+		GLint binaryGLInt = glGetUniformLocation(shader->Program, "binary");
+		assert(binaryGLInt > -1);
+
+		glUniform1i(glGetUniformLocation(shader->Program, "binary"), true);
+	}
+
+	if (isColorization) {
+
+		GLint isColorizationGLInt = glGetUniformLocation(shader->Program, "isColorization");
+		assert(isColorizationGLInt > -1);
+
+		glUniform1i(glGetUniformLocation(shader->Program, "isColorization"), true);
+
+
+
+		GLint colorizationGLInt = glGetUniformLocation(shader->Program, "colorization");
+		assert(colorizationGLInt > -1);
+
+		glUniform4fv(glGetUniformLocation(shader->Program, "colorization"), 4, colorization);
+
+		
+
+	}
+
+
+	//meu filtro customizado
+	if (isMix)
+	{
+		GLint isMixGLInt = glGetUniformLocation(shader->Program, "isMix");
+		assert(isMixGLInt > -1);
+
+		glUniform1i(glGetUniformLocation(shader->Program, "isMix"), true);
+
+		GLint channelGLInt = glGetUniformLocation(shader->Program, "channel");
+		assert(channelGLInt > -1);
+
+		glUniform1i(glGetUniformLocation(shader->Program, "channel"), channel);
+
 	}
 
 
